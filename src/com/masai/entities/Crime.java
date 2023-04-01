@@ -2,6 +2,7 @@ package com.masai.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 
 public class Crime implements Serializable{
@@ -14,6 +15,7 @@ public class Crime implements Serializable{
 	private String pSArea;
 	private LocalDate date;
 	private String victimName;
+	private List<Criminal> criminalList;
 	
 	public Crime(long crimeId, String type, String description, String pSArea, LocalDate date, String victimName) {
 		super();
@@ -66,6 +68,16 @@ public class Crime implements Serializable{
 	}
 	public void setVictimName(String victimName) {
 		this.victimName = victimName;
+	}
+
+
+	public List<Criminal> getCriminalList() {
+		return criminalList;
+	}
+
+
+	public void setCriminalList(List<Criminal> criminalList) {
+		this.criminalList = criminalList;
 	}
 		
 }
