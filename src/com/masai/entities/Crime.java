@@ -2,20 +2,24 @@ package com.masai.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 
 public class Crime implements Serializable{
 	
+	// 
 	
-	private static final long serialVersionUID = 1L;
-	private long crimeId;
+	private Integer crimeId;
 	private String type;
 	private String description;
 	private String pSArea;
 	private LocalDate date;
 	private String victimName;
+	private List<Criminal> criminalsList;
 	
-	public Crime(long crimeId, String type, String description, String pSArea, LocalDate date, String victimName) {
+
+
+	public Crime(Integer crimeId, String type, String description, String pSArea, LocalDate date, String victimName) {
 		super();
 		this.crimeId = crimeId;
 		this.type = type;
@@ -26,15 +30,22 @@ public class Crime implements Serializable{
 	}
 	
 	
+	@Override
+	public String toString() {
+		return "Crime [crimeId=" + crimeId + ", type=" + type + ", description=" + description + ", pSArea=" + pSArea
+				+ ", date=" + date + ", victimName=" + victimName + ", criminalsList=" + criminalsList + "]";
+	}
+
+
 	public Crime() {
 		super();
 	}
 
 
-	public long getCrimeId() {
+	public Integer getCrimeId() {
 		return crimeId;
 	}
-	public void setCrimeId(long crimeId) {
+	public void setCrimeId(Integer crimeId) {
 		this.crimeId = crimeId;
 	}
 	public String getType() {
@@ -64,8 +75,17 @@ public class Crime implements Serializable{
 	public String getVictimName() {
 		return victimName;
 	}
+
+	public List<Criminal> getCriminalsList() {
+		return criminalsList;
+	}
+
+	public void setCriminalsList(List<Criminal> criminalsList) {
+		this.criminalsList = criminalsList;
+	}
+
 	public void setVictimName(String victimName) {
 		this.victimName = victimName;
 	}
-		
+
 }

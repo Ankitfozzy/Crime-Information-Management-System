@@ -17,7 +17,7 @@ public class Files {
 	@SuppressWarnings("unchecked")
 	public static Map<Integer, Crime> crimeFile() {
 
-		Map<Integer, Crime> cFile = null;
+		Map<Integer, Crime> crimeFile = null;
 
 		File f = new File("Crime.ser");
 		boolean flag = false;
@@ -29,18 +29,18 @@ public class Files {
 
 			if (flag) {
 
-				cFile = new LinkedHashMap<>();
+				crimeFile = new LinkedHashMap<>();
 				try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
-					oos.writeObject(cFile);
+					oos.writeObject(crimeFile);
 				}
-				return cFile;
+				return crimeFile;
 
 			} else {
 
 				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
-					cFile = (Map<Integer, Crime>) ois.readObject();
+					crimeFile = (Map<Integer, Crime>) ois.readObject();
 				}
-				return cFile;
+				return crimeFile;
 
 			}
 
@@ -48,13 +48,13 @@ public class Files {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
 		}
-		return cFile;
+		return crimeFile;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static Map<Integer, Criminal> CriminalFile() {
 
-		Map<Integer, Criminal> cRFile = null;
+		Map<Integer, Criminal> CriminalFile = null;
 
 		File f = new File("Criminal.ser");
 		boolean flag = false;
@@ -66,18 +66,18 @@ public class Files {
 
 			if (flag) {
 				
-				cRFile = new LinkedHashMap<>();
+				CriminalFile = new LinkedHashMap<>();
 				try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f))) {
-					oos.writeObject(cRFile);
+					oos.writeObject(CriminalFile);
 				}
-				return cRFile;
+				return CriminalFile;
 
 			} else {
 				
 				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
-					cRFile = (Map<Integer, Criminal>) ois.readObject();
+					CriminalFile = (Map<Integer, Criminal>) ois.readObject();
 				}
-				return cRFile;
+				return CriminalFile;
 
 			}
 
@@ -86,7 +86,7 @@ public class Files {
 
 			System.out.println(e.getMessage());
 		}
-		return cRFile;
+		return CriminalFile;
 
 	}
 

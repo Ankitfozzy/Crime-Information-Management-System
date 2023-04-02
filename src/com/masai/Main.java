@@ -1,19 +1,24 @@
 package com.masai;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 import com.masai.entities.Crime;
 import com.masai.entities.Criminal;
+import com.masai.exceptions.InvalidCredentials;
 import com.masai.utility.Files;
 import com.masai.services.*;
 
 public class Main {
 	
-	private static void AdminFunctionality(Scanner sc, Map<Integer, Crime> Crimes, Map<Integer, Criminal> Criminals){
+	//
+	
+	private static void AdminFunctionality(Scanner sc, Map<Integer, Crime> Crimes, Map<Integer, Criminal> Criminals) throws FileNotFoundException {
 
 		adminLogin(sc);
 		
@@ -28,9 +33,9 @@ public class Main {
 				System.out.println("Press 3 add the criminal");
 				System.out.println("Press 4 update the criminal");
 				System.out.println("Press 5 assign criminals to crime");
-				System.out.println("Press 6 to remove criminal from crime");
-				System.out.println("Press 7 to delete the crime using crimeId");
-				System.out.println("Press 7 to delete the criminal using criminalId");
+				System.out.println("Press 6 remove criminal from crime");
+				System.out.println("Press 7 delete crime using crime id");
+				System.out.println("Press 8 delete criminal using criminal id");
 				choice = sc.nextInt();
 
 				switch (choice) {
@@ -90,11 +95,11 @@ public class Main {
 					System.out.println("Enter the criminal Name: ");
 					String name = sc.next();
 					System.out.println("Enter the dob of the criminal: ");
-					System.out.println("Enter the year of Criminal: ");
+					System.out.println("Enter the year of Criminal's dob: ");
 					int yr = sc.nextInt();
-					System.out.println("Enter the month of Criminal: ");
+					System.out.println("Enter the month of Criminal's dob: ");
 					int mt = sc.nextInt();
-					System.out.println("Enter the day of Criminal: ");
+					System.out.println("Enter the day of Criminal's dob: ");
 					int dy = sc.nextInt();
 					LocalDate dob = LocalDate.of(yr,mt,dy);
 					System.out.println("Enter the gender of the criminal: ");
@@ -117,7 +122,6 @@ public class Main {
 					break;
 					
 				case 4:
-
 					System.out.println("Enter the criminalId: ");
 					int criminalIdUpdated = sc.nextInt();
 					System.out.println("Enter the criminal Name: ");
@@ -145,24 +149,50 @@ public class Main {
 					System.out.println("Enter the criminal arrested from which PS: ");
 					String arrestedFromPSUpdated = sc.next();
 					Criminal criminalUpdated = new Criminal(criminalIdUpdated,nameUpdated,dobUpdated,genderUpdated,identifyingMarkUpdated,firstArrestLocalDateUpdated,arrestedFromPSUpdated);
-					String addUpdated = adminService.addCriminal(criminalUpdated,Criminals);
+					Criminal addUpdated = adminService.updateCriminal(criminalUpdated,Criminals);
 					System.out.println(addUpdated);
 					break;
 					
 				case 5:
 			
+					System.out.println("Enter the number of Criminals: ");
+					int criminalNumber = sc.nextInt();
+					System.out.println("Enter the crime Id: ");
+					int crmId = sc.nextInt(); 
+					List<Integer> criminalList = new LinkedList<>();
+					for(int i=0;i<criminalNumber;i++) {
+						System.out.println("Enter the criminal Id: ");
+						int cRId = sc.nextInt();
+						criminalList.add(cRId);
+					}
+					adminService.assignCriminalsToCrime(crmId, Crimes, criminalList, Criminals);
 					break;
-					
 				case 6:
-					
+
+					System.out.println("Enter the Id of Criminals: ");
+					int criminalIdForRemoval = sc.nextInt();
+					System.out.println("Enter the crime Id: ");
+					int crmIdForRemoval = sc.nextInt();
+
+					adminService.removeCriminalFromCrime(crmIdForRemoval, Crimes, criminalIdForRemoval, Criminals);
 					break;
-					
 				case 7:
-					
+					System.out.println("Enter the crime Id: ");
+					int crmIdForRemove = sc.nextInt();
+
+					 if(adminService.deleteCrimeByCrimeId(crmIdForRemove, Crimes)){
+						 System.out.println("crime deleted with id: "+crmIdForRemove);
+					 }
+
 					break;
 					
 				case 8:
-					
+					System.out.println("Enter the Id of Criminals: ");
+					int criminalIdForRemove = sc.nextInt();
+					if(adminService.deleteCriminalByCriminalId(criminalIdForRemove, Criminals)){
+						System.out.println("crime deleted with id: "+criminalIdForRemove);
+					}
+
 					break;
 					
 				default:
@@ -174,9 +204,64 @@ public class Main {
 			System.out.println(e.getMessage());
 		}
 	}
+	private static void UserFunctionality(Scanner sc, Map<Integer, Crime> Crimes, Map<Integer, Criminal> Criminals) throws FileNotFoundException {
 
-	
-	public static void adminLogin(Scanner sc){
+
+		UserService userService = new UserServiceImpl();
+
+		int choice = 0;
+		try {
+			do {
+				System.out.println("Press 1 to view total crime for each police station area for a date range.");
+				System.out.println("Press 2 to view total crime for each crime type for a date range.");
+				System.out.println("Press 3 to Can search for criminal by name.");
+				System.out.println("Press 4 to Can search for crime by description.");
+				choice = sc.nextInt();
+
+				switch (choice) {
+
+					case 1:
+
+						System.out.println("Enter the pSArea: ");
+						String pSArea = sc.next();
+
+						userService.totalNumberOfCrimeByPSAreaWithDateRange(pSArea, Crimes);
+						break;
+
+					case 2:
+
+						System.out.println("Enter the Crime type: ");
+						String crimeType = sc.next();
+
+						userService.totalNumberOfCrimeByCrimeTypeWithDateRange(crimeType, Crimes);
+						break;
+
+					case 3:
+						System.out.println("Enter the criminal Name: ");
+						String nameUpdated = sc.next();
+						Criminal criminal =userService.searchCriminalByName(nameUpdated,Criminals);
+                        System.out.println(criminal.toString());
+						break;
+
+					case 4:
+						System.out.println("Enter the crime description: ");
+						String crimeDescription = sc.next();
+						Crime crime = userService.searchCrimeByDescription(crimeDescription, Crimes);
+                        System.out.println(crime.toString());
+						break;
+
+					default:
+						throw new IllegalArgumentException("Unexpected value: " + choice);
+				}
+
+			} while (choice <= 6);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+
+	public static void adminLogin(Scanner sc) {
 
 		System.out.println("Enter the user name");
 		String userName = sc.next();
@@ -186,6 +271,9 @@ public class Main {
 
 			System.out.println("successfully login");
 		} 
+        else {
+			throw new InvalidCredentials("Invalid Admin Credentials");
+		}
 	}
 
 	public static void main(String[] args) {
@@ -200,23 +288,17 @@ public class Main {
 
 			int preference = 0;
 			do {
-				System.out.println("Please enter your preference, " + " '1' --> Admin login , '2' --> User login , "
-				+ "'3' for User signup, '0' for exit");
+				System.out.println("Please enter your preference, " + " '1' --> Admin login , '2' --> User login , '0' for exit");
 				preference = sc.nextInt();
 				switch (preference) {
 				case 1:
 					AdminFunctionality(sc,crimes,criminals);
 					break;
 				case 2:
-					
+					UserFunctionality(sc,crimes,criminals);
 					break;
-
-				case 3:
-					
-					break;
-
 				case 0:
-					
+					System.out.println("successfully existed from the system");
 					break;
 
 				default:
@@ -231,6 +313,7 @@ public class Main {
 
 			System.out.println(e.getMessage());
 		} finally {
+			// serialization (finally always executed)
 			try (ObjectOutputStream poos = new ObjectOutputStream(new FileOutputStream("Crime.ser"))) {
 				poos.writeObject(crimes);
 				try (ObjectOutputStream coos = new ObjectOutputStream(new FileOutputStream("Criminal.ser"))) {
@@ -238,9 +321,11 @@ public class Main {
 				}
 				
 			} catch (Exception e) {
+				// TODO: handle exception
 				System.out.println(e.getMessage());
 			}
 		}
 	}
 
 }
+

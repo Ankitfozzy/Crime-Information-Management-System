@@ -2,20 +2,34 @@ package com.masai.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
-@SuppressWarnings("serial")
 public class Criminal implements Serializable{
+
+//
 	
-	private long criminalId;
+	private Integer criminalId;
 	private String name;
 	private LocalDate dob;
 	private String gender;
 	private String identifyingMark;
 	private LocalDate firstArrestLocalDate;
 	private String arrestedFromPS;
+	private List<Crime> crimesList;
 	
-	public Criminal(long criminalId, String name, LocalDate dob, String gender, String identifyingMark, LocalDate firstArrestLocalDate,
-			String arrestedFromPS) {
+	
+
+
+	@Override
+	public String toString() {
+		return "Criminal [criminalId=" + criminalId + ", name=" + name + ", dob=" + dob + ", gender=" + gender
+				+ ", identifyingMark=" + identifyingMark + ", firstArrestLocalDate=" + firstArrestLocalDate
+				+ ", arrestedFromPS=" + arrestedFromPS + ", crimesList=" + crimesList + "]";
+	}
+
+
+	public Criminal(Integer criminalId, String name, LocalDate dob, String gender, String identifyingMark, LocalDate firstArrestLocalDate,
+					String arrestedFromPS) {
 		super();
 		this.criminalId = criminalId;
 		this.name = name;
@@ -33,10 +47,10 @@ public class Criminal implements Serializable{
 	
 
 
-	public long getCriminalId() {
+	public Integer getCriminalId() {
 		return criminalId;
 	}
-	public void setCriminalId(long criminalId) {
+	public void setCriminalId(Integer criminalId) {
 		this.criminalId = criminalId;
 	}
 	public String getName() {
